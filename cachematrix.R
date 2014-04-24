@@ -6,13 +6,11 @@ makeCacheMatrix <- function(x = matrix()) {
       # x is the cached variable that will store the matrix
       # i is the cached variable that will store inverse of the matrix
       
-      i<-matrix(rep(NA,4),nrow(x),ncol(x)) # initiate i to NULL
-      
+      i <<- matrix(numeric(),nrow(x),ncol(x))  # initiate i to NULL matrix
       
       set <- function(y) {
             x <<- y
-            i<-matrix(rep(NA,4),nrow(x),ncol(x)) 
-            
+            i <<- matrix(numeric(),nrow(x),ncol(x)) 
       } 
       # set is a function that allows to cache matrix value into x 
       #and initiate inverse matrix value to NULL
@@ -21,13 +19,12 @@ makeCacheMatrix <- function(x = matrix()) {
       setinverse <- function(inverse) i <<- inverse 
       # setinverse is a function that allows to cache inverse matrix value into i
       
-      
-      getinverse <- function() i # get function simply gets the cached value of i
+      getinverse <- function() i# get function simply gets the cached value of i
       
       list(set = set, get = get,
            setinverse = setinverse,
            getinverse = getinverse)
-      # add comment here!!! show function results?
+      #returns all 4 functions created for this x
 }
 
 ## cacheSolve: Returns a matrix that is the inverse of 'x' - from cache when existing
@@ -38,12 +35,11 @@ makeCacheMatrix <- function(x = matrix()) {
 
 cacheSolve <- function(x) {
       
-      # i <- getinverse() ## reads from cache 
       i <- x$getinverse() ## reads from cache 
       
-      if(!is.null(i)) {
+      if(!all(is.na(i))) { # what is the equivalent for a matrix?
             message("getting cached data")
-            return(i)
+            return(print(i))
       } # if something exists in cache for the inverse matrix, display a message 
       # and return existing cache value (ends function)
       
@@ -51,22 +47,16 @@ cacheSolve <- function(x) {
       data <- x$get() # get matrix
       i <- solve(data) # inverse matrix using "solve" function
       x$setinverse(i) # put matrix inverse result into cache
-      i # returns computed value     
+      print(i) # returns computed value     
       
 }
 
 
 
-# tests 
-x<-matrix(1:4,2,2)
-makeCacheMatrix(x)
-
+# test
+# m1<-matrix(5:8,2)
 m1<-matrix(1:4,2,2)
-m1
 m2<-solve(m1)
-m2
-cacheSolve(m1)
-
-# > cacheSolve(m1)
-# Error in x$getinverse : $ operator is invalid for atomic vectors
+a<-makeCacheMatrix(m1)
+b<-cacheSolve(a)
 
